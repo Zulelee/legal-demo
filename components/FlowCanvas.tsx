@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import ReactFlow, {
   Controls,
   Background,
@@ -14,6 +14,7 @@ import ReactFlow, {
 } from 'reactflow'
 import { HeaderNode, ClauseNode, OptionsNode, DateNode, FooterNode } from './nodes/PrivacyPolicyNodes'
 import Sidebar from './Sidebar'
+import FormPreview from './FormPreview'
 
 const initialNodes: any[] = []
 const initialEdges: Edge[] = []
@@ -95,7 +96,19 @@ export default function FlowCanvas() {
         id: `${type}-${nodes.length + 1}`,
         type,
         position,
-        data: { label: `${type} node` },
+        data: { 
+          label: `${type} node`,
+          value: '',
+          onChange: (value: string) => {
+            setNodes((nds) =>
+              nds.map((node) =>
+                node.id === newNode.id
+                  ? { ...node, data: { ...node.data, value } }
+                  : node
+              )
+            );
+          },
+        },
       }
 
       setNodes((nds) => nds.concat(newNode))
@@ -128,6 +141,7 @@ export default function FlowCanvas() {
         </button>
       </ReactFlow>
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <FormPreview nodes={nodes} />
     </div>
   )
 }

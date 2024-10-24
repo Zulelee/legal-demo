@@ -3,6 +3,7 @@ import { Handle, Position } from 'reactflow';
 interface NodeData {
   label: string;
   value?: string;
+  onChange?: (value: string) => void;
 }
 
 export function HeaderNode({ data }: { data: NodeData }) {
@@ -15,9 +16,7 @@ export function HeaderNode({ data }: { data: NodeData }) {
         className="w-full p-2 border rounded"
         placeholder="Enter header text"
         value={data.value || ''}
-        onChange={(e) => {
-          data.value = e.target.value;
-        }}
+        onChange={(e) => data.onChange?.(e.target.value)}
       />
       <Handle type="source" position={Position.Bottom} />
     </div>
