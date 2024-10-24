@@ -10,11 +10,21 @@ import ReactFlow, {
   Edge,
   addEdge,
   Node,
+  NodeTypes,
 } from 'reactflow'
+import { HeaderNode, ClauseNode, OptionsNode, DateNode, FooterNode } from './nodes/PrivacyPolicyNodes'
 import Sidebar from './Sidebar'
 
 const initialNodes: any[] = []
 const initialEdges: Edge[] = []
+
+const nodeTypes: NodeTypes = {
+  header: HeaderNode,
+  clause: ClauseNode,
+  options: OptionsNode,
+  date: DateNode,
+  footer: FooterNode,
+}
 
 export default function FlowCanvas() {
   const reactFlowWrapper = useRef<HTMLDivElement>(null)
@@ -96,6 +106,7 @@ export default function FlowCanvas() {
   return (
     <div className="w-full h-full relative" ref={reactFlowWrapper}>
       <ReactFlow
+        nodeTypes={nodeTypes}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}

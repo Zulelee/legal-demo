@@ -1,11 +1,11 @@
 import React from "react";
 
 const nodeTypes = [
-  { type: "input", label: "Input Node" },
-  { type: "output", label: "Output Node" },
-  { type: "default", label: "Default Node" },
-  { type: "custom", label: "Custom Node" },
-  { type: "special", label: "Special Node" },
+  { type: "header", label: "Header" },
+  { type: "clause", label: "Clause" },
+  { type: "options", label: "Options" },
+  { type: "date", label: "Date" },
+  { type: "footer", label: "Footer" },
 ];
 
 interface SidebarProps {
@@ -26,6 +26,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       }`}
     >
       <div className="p-4">
+        <h2 className="text-xl font-bold mb-4">Privacy Policy Builder</h2>
         <button
           onClick={onClose}
           className="mb-4 text-gray-500 hover:text-gray-700"
