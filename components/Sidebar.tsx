@@ -1,28 +1,28 @@
-import React from 'react'
+import React from "react";
 
 const nodeTypes = [
-  { type: 'input', label: 'Input Node' },
-  { type: 'output', label: 'Output Node' },
-  { type: 'default', label: 'Default Node' },
-  { type: 'custom', label: 'Custom Node' },
-  { type: 'special', label: 'Special Node' },
-]
+  { type: "input", label: "Input Node" },
+  { type: "output", label: "Output Node" },
+  { type: "default", label: "Default Node" },
+  { type: "custom", label: "Custom Node" },
+  { type: "special", label: "Special Node" },
+];
 
 interface SidebarProps {
-  isOpen: boolean
-  onClose: () => void
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const onDragStart = (event: React.DragEvent, nodeType: string) => {
-    event.dataTransfer.setData('application/reactflow', nodeType)
-    event.dataTransfer.effectAllowed = 'move'
-  }
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
+  };
 
   return (
     <div
-      className={`fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${
-        isOpen ? 'translate-x-0' : 'translate-x-full'
+      className={`fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform transition-transform text-black duration-300 ${
+        isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
       <div className="p-4">
@@ -46,5 +46,5 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
