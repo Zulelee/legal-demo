@@ -21,7 +21,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <div
-      className={`fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform transition-transform text-black duration-300 ${
+      className={`fixed right-0 top-0 h-full w-64 bg-white shadow-lg transform transition-transform text-black duration-300 overflow-y-auto ${
         isOpen ? "translate-x-0" : "translate-x-full"
       }`}
     >
