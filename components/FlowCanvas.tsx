@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useCallback, useRef } from 'react'
+import React, { useState, useCallback, useRef, useEffect } from 'react'
 import ReactFlow, {
   Controls,
   Background,
@@ -9,6 +9,7 @@ import ReactFlow, {
   Connection,
   Edge,
   addEdge,
+  Node,
 } from 'reactflow'
 import Sidebar from './Sidebar'
 
@@ -25,6 +26,41 @@ export default function FlowCanvas() {
     (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   )
+
+  const onNodesDelete = useCallback(
+    (nodesToDelete: Node[]) => {
+      // Delete associated edges when nodes are deleted
+      setEdges((eds) => 
+        eds.filter(
+          (edge) => 
+            !nodesToDelete.some(
+              (node) => node.id === edge.source || node.id === edge.target
+            )
+        )
+      )
+    },
+    [setEdges]
+  )
+
+  const onEdgeClick = useCallback(
+    (_: React.MouseEvent, edge: Edge) => {
+      setEdges((eds) => eds.filter((e) => e.id !== edge.id))
+    },
+    [setEdges]
+  )
+
+  // Handle keyboard delete
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Delete' || event.key === 'Backspace') {
+        setNodes((nds) => nds.filter((node) => !node.selected))
+        setEdges((eds) => eds.filter((edge) => !edge.selected))
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [setNodes, setEdges])
 
   const onDragOver = useCallback((event: React.DragEvent) => {
     event.preventDefault()
@@ -67,6 +103,8 @@ export default function FlowCanvas() {
         onConnect={onConnect}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onNodesDelete={onNodesDelete}
+        onEdgeClick={onEdgeClick}
         fitView
       >
         <Background />
