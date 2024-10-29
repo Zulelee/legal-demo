@@ -466,6 +466,10 @@ export default function AdvancedContractTemplateGraph() {
           nodesDraggable={true}
           nodesConnectable={true}
           elementsSelectable={true}
+          connectOnClick={true}
+          nodesDraggable={true}
+          nodesConnectable={true}
+          elementsSelectable={true}
         >
           <Background />
           <Controls />
