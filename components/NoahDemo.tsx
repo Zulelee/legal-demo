@@ -193,11 +193,6 @@ const initialEdges: Edge[] = [
 ];
 
 export default function AdvancedContractTemplateGraph() {
-  const deleteNode = useCallback((id: string) => {
-    setNodes((nodes) => nodes.filter((node) => node.id !== id));
-    setEdges((edges) => edges.filter((edge) => edge.source !== id && edge.target !== id));
-  }, [setNodes, setEdges]);
-
   const [nodes, setNodes, onNodesChange] = useNodesState(
     initialNodes.map(node => ({
       ...node,
@@ -218,11 +213,6 @@ export default function AdvancedContractTemplateGraph() {
       ),
     [setEdges]
   );
-
-  const deleteNode = useCallback((id: string) => {
-    setNodes((nodes) => nodes.filter((node) => node.id !== id));
-    setEdges((edges) => edges.filter((edge) => edge.source !== id && edge.target !== id));
-  }, [setNodes, setEdges]);
 
   const addNode = useCallback((type: string, label: string, description: string) => {
     const newNode = {
