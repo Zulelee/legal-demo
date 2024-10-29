@@ -16,8 +16,16 @@ import "reactflow/dist/style.css";
 import { PlusCircle, FileText, User, ChevronDown } from "lucide-react";
 
 const nodeTypes = {
-  contractTemplate: ({ data }) => (
-    <div className="px-4 py-2 shadow-md rounded-md bg-blue-100 border-2 border-blue-500">
+  contractTemplate: ({ data, id }) => (
+    <div className="px-4 py-2 shadow-md rounded-md bg-blue-100 border-2 border-blue-500 relative">
+      <button 
+        className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white hover:bg-red-600"
+        onClick={() => data.onDelete(id)}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+      </button>
       <div className="font-bold">{data.label}</div>
       <div className="text-xs">{data.description}</div>
     </div>
@@ -66,7 +74,7 @@ const nodeTypes = {
   ),
 };
 
-const initialNodes: Node[] = [
+const createInitialNodes = (deleteNode: (id: string) => void): Node[] => [
   {
     id: "1",
     type: "contractTemplate",
@@ -185,7 +193,17 @@ const initialEdges: Edge[] = [
 ];
 
 export default function AdvancedContractTemplateGraph() {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const deleteNode = useCallback((id: string) => {
+    setNodes((nodes) => nodes.filter((node) => node.id !== id));
+    setEdges((edges) => edges.filter((edge) => edge.source !== id && edge.target !== id));
+  }, [setNodes, setEdges]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(
+    initialNodes.map(node => ({
+      ...node,
+      data: { ...node.data, onDelete: deleteNode }
+    }))
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [nodeName, setNodeName] = useState("");
   const [nodeDescription, setNodeDescription] = useState("");
@@ -201,17 +219,26 @@ export default function AdvancedContractTemplateGraph() {
     [setEdges]
   );
 
-  const addNode = useCallback(() => {
+  const deleteNode = useCallback((id: string) => {
+    setNodes((nodes) => nodes.filter((node) => node.id !== id));
+    setEdges((edges) => edges.filter((edge) => edge.source !== id && edge.target !== id));
+  }, [setNodes, setEdges]);
+
+  const addNode = useCallback((type: string, label: string, description: string) => {
     const newNode = {
-      id: (nodes.length + 1).toString(),
-      type: nodeType,
-      data: { label: nodeName, description: nodeDescription },
+      id: `${type}-${Date.now()}`,
+      type,
+      data: { 
+        label: label || nodeName, 
+        description: description || nodeDescription,
+        onDelete: deleteNode
+      },
       position: { x: Math.random() * 500, y: Math.random() * 400 },
     };
     setNodes((nds) => nds.concat(newNode));
     setNodeName("");
     setNodeDescription("");
-  }, [nodeType, nodeName, nodeDescription, nodes, setNodes]);
+  }, [nodeName, nodeDescription, deleteNode]);
 
   const toggleAccordion = (value: string) => {
     setOpenAccordion(openAccordion === value ? "" : value);
@@ -240,7 +267,7 @@ export default function AdvancedContractTemplateGraph() {
               <div className="p-2">
                 <button
                   className="w-full mt-2 p-2 bg-blue-500 text-white rounded-md flex items-center justify-center"
-                  onClick={() => setNodeType("contractTemplate")}
+                  onClick={() => addNode("contractTemplate", "New Contract Template", "Template Description")}
                 >
                   <FileText className="mr-2 h-4 w-4" /> Add Template
                 </button>
