@@ -462,6 +462,10 @@ export default function AdvancedContractTemplateGraph() {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           fitView
+          connectOnClick={true}
+          nodesDraggable={true}
+          nodesConnectable={true}
+          elementsSelectable={true}
         >
           <Background />
           <Controls />
