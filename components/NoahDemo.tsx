@@ -193,15 +193,18 @@ const initialEdges: Edge[] = [
 ];
 
 export default function AdvancedContractTemplateGraph() {
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
   const deleteNode = useCallback((id: string) => {
     setNodes((nodes) => nodes.filter((node) => node.id !== id));
     setEdges((edges) => edges.filter((edge) => edge.source !== id && edge.target !== id));
   }, [setNodes, setEdges]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(
-    createInitialNodes(deleteNode)
-  );
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  // Initialize nodes after deleteNode is defined
+  useEffect(() => {
+    setNodes(createInitialNodes(deleteNode));
+  }, [deleteNode, setNodes]);
   const [nodeName, setNodeName] = useState("");
   const [nodeDescription, setNodeDescription] = useState("");
   const [nodeType, setNodeType] = useState("contractTemplate");
